@@ -1,10 +1,21 @@
 #!/usr/bin/env lua
+-- @module lfr
 local lfr = {}
 local MAX_RECURSION = 5
 
--- function lfr.set
 
-function lfr.prettify_table(ugly_table, _recursion_level)  ---@type string
+--- prettify_table
+-- make a good-looking string out of a table
+-- raises an error if ugly_table param is not a table
+-- @usage
+local usage = [[
+my_table = {1, 2, a = {"text", "text"}}
+nice_output = lfr.prettify_table(my_table)
+io.write(nice_output)
+]]
+-- @tparam ugly_table table
+-- @treturn string your pretty table ready to be sent to stdout
+function lfr.prettify_table(ugly_table, _recursion_level)
 	local param_type = type(ugly_table)
 	if param_type ~= "table" then
 		error("prettify_table accepts only table, not " .. param_type)
@@ -29,7 +40,7 @@ function lfr.prettify_table(ugly_table, _recursion_level)  ---@type string
 	return nice_message .. string.rep("\t", _recursion_level - 1) .. "}\n"
 end
 
-function lfr.pprint(object)  ---@type nil
+function lfr.pprint(object)
 	local object_type, result = type(object)
 	if object_type == "table" then
 		result = lfr.prettify_table(object, 0)
