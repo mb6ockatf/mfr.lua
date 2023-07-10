@@ -30,7 +30,8 @@
 
 <h2>Contents</h2>
 <ul>
-<li><a href="#Functions">Functions</a></li>
+<li><a href="#"> </a></li>
+<li><a href="#showing">showing</a></li>
 <li><a href="#settings">settings</a></li>
 </ul>
 
@@ -49,19 +50,27 @@
 <p></p>
 
 
-<h2><a href="#Functions">Functions</a></h2>
+<h2><a href="#"> </a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#describe_fg_colors">describe_fg_colors ()</a></td>
-	<td class="summary">send available foreground colors to stdout.</td>
+	<td class="name" nowrap><a href="#clear_screen">clear_screen ()</a></td>
+	<td class="summary">clear terminal screen.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#describe_bg_colors">describe_bg_colors ()</a></td>
-	<td class="summary">send available background colors to stdout.</td>
+	<td class="name" nowrap><a href="#is_supporting_colors">is_supporting_colors ()</a></td>
+	<td class="summary">check if terminal supports colors.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#describe_special_styles">describe_special_styles ()</a></td>
-	<td class="summary">send available special styles to stdout.</td>
+	<td class="name" nowrap><a href="#set_bg">set_bg (message, color, is_closed, is_forced)</a></td>
+	<td class="summary">apply background color to string.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#set_fg">set_fg (message, color, is_forced)</a></td>
+	<td class="summary">apply foreground color to string.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#set_special_style">set_special_style (message, style, is_forced)</a></td>
+	<td class="summary">apply special style to string.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#prettify_table">prettify_table (ugly_table)</a></td>
@@ -70,6 +79,21 @@
 	<tr>
 	<td class="name" nowrap><a href="#pprint">pprint (object)</a></td>
 	<td class="summary">make a good-looking string out of anything.</td>
+	</tr>
+</table>
+<h2><a href="#showing">showing</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#describe_fg_colors">describe_fg_colors (is_forced)</a></td>
+	<td class="summary">send available foreground colors to stdout.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#describe_bg_colors">describe_bg_colors (is_forced)</a></td>
+	<td class="summary">send available background colors to stdout.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#describe_special_styles">describe_special_styles (is_forced)</a></td>
+	<td class="summary">send available special styles to stdout.</td>
 	</tr>
 </table>
 <h2><a href="#settings">settings</a></h2>
@@ -96,15 +120,15 @@
 <br/>
 
 
-    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+    <h2 class="section-header "><a name=""></a> </h2>
 
     <dl class="function">
     <dt>
-    <a name = "describe_fg_colors"></a>
-    <strong>describe_fg_colors ()</strong>
+    <a name = "clear_screen"></a>
+    <strong>clear_screen ()</strong>
     </dt>
     <dd>
-    send available foreground colors to stdout.
+    clear terminal screen.
 
 
 
@@ -114,30 +138,155 @@
 
 </dd>
     <dt>
-    <a name = "describe_bg_colors"></a>
-    <strong>describe_bg_colors ()</strong>
+    <a name = "is_supporting_colors"></a>
+    <strong>is_supporting_colors ()</strong>
     </dt>
     <dd>
-    send available background colors to stdout.
+    check if terminal supports colors.
 
 
 
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+           <span class="types"><span class="type">number</span></span>
+        number of supported colors</li>
+        <li>
+           <span class="types"><span class="type">boolean</span></span>
+        false if colors aren't supported</li>
+    </ol>
 
 
 
 
 </dd>
     <dt>
-    <a name = "describe_special_styles"></a>
-    <strong>describe_special_styles ()</strong>
+    <a name = "set_bg"></a>
+    <strong>set_bg (message, color, is_closed, is_forced)</strong>
     </dt>
     <dd>
-    send available special styles to stdout.
+    apply background color to string.
 
 
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">message</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
+         string apply background color to
+        </li>
+        <li><span class="parameter">color</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
+         background color to be applied to message
+        </li>
+        <li><span class="parameter">is_closed</span>
+            <span class="types"><span class="type">boolean</span></span>
+         whether style will be disabled with end of message
+        </li>
+        <li><span class="parameter">is_forced</span>
+            <span class="types"><span class="type">boolean</span></span>
+         whether style will be applied evem if colors are
+ not supported
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
+        colorful message
+    </ol>
+
+    <h3>Raises:</h3>
+    if colors are not supported and is_forced is not true
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="index.html#describe_bg_colors">lfr.describe_bg_colors</a>
+    </ul>
 
 
+</dd>
+    <dt>
+    <a name = "set_fg"></a>
+    <strong>set_fg (message, color, is_forced)</strong>
+    </dt>
+    <dd>
+    apply foreground color to string.
 
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">message</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
+         string apply color to
+        </li>
+        <li><span class="parameter">color</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
+         color to be applied to message
+        </li>
+        <li><span class="parameter">is_forced</span>
+            <span class="types"><span class="type">boolean</span></span>
+         whether style will be applied even if colors are
+ not supported
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
+        colorful message
+    </ol>
+
+    <h3>Raises:</h3>
+    if colors are not supported and is_forced is not true
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="index.html#describe_fg_colors">lfr.describe_fg_colors</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "set_special_style"></a>
+    <strong>set_special_style (message, style, is_forced)</strong>
+    </dt>
+    <dd>
+    apply special style to string.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">message</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
+         string apply style to
+        </li>
+        <li><span class="parameter">style</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
+         style to be applied to message
+        </li>
+        <li><span class="parameter">is_forced</span>
+            <span class="types"><span class="type">boolean</span></span>
+         whether style will be applied even if colors are
+ not supported
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
+        styled message
+    </ol>
+
+    <h3>Raises:</h3>
+    if colors are not supported and is_forced is not true
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="index.html#describe_special_styles">lfr.describe_special_styles</a>
+    </ul>
 
 
 </dd>
@@ -164,8 +313,6 @@
         pretty table ready to be sent to stdout
     </ol>
 
-    <h3>Raises:</h3>
-    error if ugly_table param is not a table.
 
 
     <h3>Usage:</h3>
@@ -199,6 +346,82 @@ pretty_table = lfr.<span class="function-name">prettify_table</span>(useless_lis
         <pre class="example">perfect_table = {<span class="number">1</span>, <span class="number">2</span>, a = {<span class="string">"text1"</span>, <span class="string">"text2"</span>}}
 lfr.<span class="function-name">pprint</span>(perfect_table)</pre>
     </ul>
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="showing"></a>showing</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "describe_fg_colors"></a>
+    <strong>describe_fg_colors (is_forced)</strong>
+    </dt>
+    <dd>
+    send available foreground colors to stdout.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">is_forced</span>
+            <span class="types"><span class="type">boolean</span></span>
+         if true, output is provided even if terminal does
+ not support colors.
+        </li>
+    </ul>
+
+
+    <h3>Raises:</h3>
+    if colors are not supported and is_forced is not true
+
+
+
+</dd>
+    <dt>
+    <a name = "describe_bg_colors"></a>
+    <strong>describe_bg_colors (is_forced)</strong>
+    </dt>
+    <dd>
+    send available background colors to stdout.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">is_forced</span>
+            <span class="types"><span class="type">boolean</span></span>
+         if true, output is provided even if terminal does
+ not support colors.
+        </li>
+    </ul>
+
+
+    <h3>Raises:</h3>
+    if colors are not supported and is_forced is not true
+
+
+
+</dd>
+    <dt>
+    <a name = "describe_special_styles"></a>
+    <strong>describe_special_styles (is_forced)</strong>
+    </dt>
+    <dd>
+    send available special styles to stdout.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">is_forced</span>
+            <span class="types"><span class="type">boolean</span></span>
+         if true, output is provided even if terminal does
+ not support colors.
+        </li>
+    </ul>
+
+
+    <h3>Raises:</h3>
+    if colors are not supported and is_forced is not true
+
+
 
 </dd>
 </dl>
@@ -316,7 +539,7 @@ lfr.<span class="function-name">pprint</span>(perfect_table)</pre>
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/lunarmodules/LDoc">LDoc 1.5.0</a></i>
-<i style="float:right;">Last updated 2023-07-08 21:27:27 </i>
+<i style="float:right;">Last updated 2023-07-09 19:00:21 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
