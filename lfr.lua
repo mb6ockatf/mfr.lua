@@ -1,7 +1,16 @@
 #!/usr/bin/env lua
 --- lua formatter
 -- @module lfr
-	
+
+--- check if element belongs to array
+-- @param element element to search for
+-- @tparam table sequence array to search in
+-- @treturn boolean true if element exists in sequence, otherwise false
+local function belongs(element, sequence)
+	for i=1, #sequence, 1 do if element == sequence[i] then return true end end
+	return false
+end
+
 --- compare tables when sorting.
 -- both arguments must contain `value` field.
 -- @tparam table first table to be compared with second table
@@ -33,6 +42,27 @@ local function deepcopy(orig, _recursion_level)
 	end
 	return copy
 end
+	
+--- split string by `separator` and return array.
+-- @tparam string str text to be splitted by `separator`
+-- @tparam string separator string to split `str` with
+local function split(str, separator)
+	if separator == nil then separator = " "
+	elseif type(separator) ~= "string" then
+		error("separator argument must be string")
+	end
+	local result, buffer, character = {}, ""
+	for i = 1, #str, 1 do
+		character = str:sub(i, i)
+		if character ~= separator then buffer = buffer .. character
+		else
+			table.insert(result, buffer)
+			buffer = ""
+		end
+	end
+	table.insert(result, buffer)
+	return result
+end
 
 --- execute system shell command.
 -- @tparam string command command to be sent for execution
@@ -62,6 +92,47 @@ _SPECIAL_STYLES = {bold = "\27[1m", nobold = "\27[22m",
 underline = "\27[4m", nounderline = "\27[24m", negative = "\27[7m",
 nonegative = "\27[27m"},
 }
+
+--- create frame with message in terminal.
+-- @tparam string message text to be displayed
+-- @tparam number width width of the frame
+-- @tparam string pattern pattern to be used to create frame
+-- @treturn string framed message
+function lfr.create_frame(message, width, pattern)
+	local list = {"table", "nil"}
+	assert(type(message) == "string", "message argument is string")
+	assert(belongs(type(width), {"number", "nil"}),
+	"size argument is table or nil")
+	assert(belongs(type(pattern), {"string", "nil"}),
+	"pattern argument is string or nil")
+	assert(belongs(type(position), list), "position argument is table or nil")
+	local length, current_length, buffer, top_border = message:len(), 0, ""
+	if width == nil then width = 80 end
+	if pattern == nil then pattern = "*" end
+	top_border = string.rep(pattern, width) .. "\n"
+	result = top_border .. pattern .. " "
+	if length < width - 4 then
+		result = result .. message .. string.rep(" ", width - length - 3)
+		result = result .. pattern .. "\n" .. top_border
+		return result
+	end
+	message = split(message)
+	for index, word in ipairs(message) do
+		current_length = current_length + word:len() + 1
+		buffer = buffer .. word .. " "
+		if index + 1 > #message then
+			;
+		elseif current_length + message[index + 1]:len() > width - 4 then
+			buffer = buffer:sub(1, -2)
+			result = result .. buffer
+			result = result .. string.rep(" ", width - buffer:len() - 3)
+			result = result .. pattern .. "\n" .. pattern .. " "
+			buffer, current_length = "", 0
+		end
+	end
+	result = result .. buffer:sub(1, -2) .. string.rep(" ", width - buffer:len() - 2)
+	return result .. pattern .. "\n".. top_border
+end
 
 --- @section showing
 
