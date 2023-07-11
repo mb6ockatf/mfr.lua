@@ -11,6 +11,25 @@ local function belongs(element, sequence)
 	return false
 end
 
+
+--- cut string into slices of certain length.
+-- @tparam string str string to be sliced
+-- @tparam number length slices' length
+-- @treturn table list of slices
+local function cut_string(str, length)
+	local result, counter = {"",}, 0
+	for character_index = 1, #str do
+		if counter < length then
+			counter = counter + 1
+			result[#result] = result[#result] .. str[character_index]
+		else
+			counter = 0
+			table.insert(result, str[character_index])
+		end
+	end
+	return result
+end
+
 --- compare tables when sorting.
 -- both arguments must contain `value` field.
 -- @tparam table first table to be compared with second table
@@ -60,7 +79,7 @@ local function split(str, separator)
 			buffer = ""
 		end
 	end
-	table.insert(result, buffer)
+	if buffer:len() > 0 then table.insert(result, buffer) end
 	return result
 end
 
@@ -75,62 +94,82 @@ local function execute_system_command(command)
 	return output
 end
 
-mfr = {_MAX_RECURSION = 5, _cache = {},
-_FG_COLORS = {black = "\27[30m", red = "\27[31m", green = "\27[32m",
-orange = "\27[33m", blue = "\27[34m", purple = "\27[35m", cyan = "\27[36m",
-light_gray = "\27[37m", default = "\27[39m", dark_grey = "\27[90m",
-light_red = "\27[91m", light_green = "\27[92m", yellow = "\27[93m",
-light_blue = "\27[94m", light_purple = "\27[95m", light_cyan = "\27[96m",
-white = "\27[97m"},
-_BG_COLORS = {black = "\27[40m", red = "\27[41m", green = "\27[42m",
-yellow = "\27[43m", blue = "\27[44m", magenta = "\27[45m", cyan = "\27[46m",
-white = "\27[47m", default = "\27[49m", light_black = "\27[100m",
-light_red = "\27[101m", light_green = "\27[102m", light_yellow = "\27[103m",
-light_blue = "\27[104m", light_magenta = "\27[105m", light_cyan = "\27[106m",
-light_white = "\27[107m"},
-_SPECIAL_STYLES = {bold = "\27[1m", nobold = "\27[22m",
-underline = "\27[4m", nounderline = "\27[24m", negative = "\27[7m",
-nonegative = "\27[27m"},
+mfr = {
+	_MAX_RECURSION = 5, _TAB_REPRESENTATION = string.rep(" ", 4), _cache = {},
+	_FG_COLORS = {black = "\27[30m", red = "\27[31m", green = "\27[32m",
+	orange = "\27[33m", blue = "\27[34m", purple = "\27[35m", cyan = "\27[36m",
+	light_gray = "\27[37m", default = "\27[39m", dark_grey = "\27[90m",
+	light_red = "\27[91m", light_green = "\27[92m", yellow = "\27[93m",
+	light_blue = "\27[94m", light_purple = "\27[95m", light_cyan = "\27[96m",
+	white = "\27[97m"},
+	_BG_COLORS = {black = "\27[40m", red = "\27[41m", green = "\27[42m",
+	yellow = "\27[43m", blue = "\27[44m", magenta = "\27[45m", cyan = "\27[46m",
+	white = "\27[47m", default = "\27[49m", light_black = "\27[100m",
+	light_red = "\27[101m", light_green = "\27[102m", light_yellow = "\27[103m",
+	light_blue = "\27[104m", light_magenta = "\27[105m",
+	light_cyan = "\27[106m", light_white = "\27[107m"},
+	_SPECIAL_STYLES = {bold = "\27[1m", nobold = "\27[22m",
+	underline = "\27[4m", nounderline = "\27[24m", negative = "\27[7m",
+	nonegative = "\27[27m"},
 }
 
 --- create frame with message in terminal.
+-- note that all tabs will be converted to character sequence defined by
+-- `set_tab_representation` - 4 spaces is a default value.
 -- @tparam string message text to be displayed
 -- @tparam number width width of the frame
 -- @tparam string pattern pattern to be used to create frame
 -- @treturn string framed message
+-- @see mfr.set_tab_representation
 function mfr.create_frame(message, width, pattern)
 	local list = {"table", "nil"}
+	if type(message) == "table" and not width and not pattern then
+		pattern, width = message.pattern, message.width
+		message = message.message
+	end
 	assert(type(message) == "string", "message argument is string")
-	assert(belongs(type(width), {"number", "nil"}),
-	"size argument is table or nil")
+	assert(belongs(type(width), {"number", "nil"}), "width is table or nil")
 	assert(belongs(type(pattern), {"string", "nil"}),
-	"pattern argument is string or nil")
-	local length, current_length, buffer, top_border = message:len(), 0, ""
-	if width == nil then width = 80 end
-	if pattern == nil then pattern = "*" end
-	top_border = string.rep(pattern, width) .. "\n"
-	result = top_border .. pattern .. " "
-	if length < width - 4 then
-		result = result .. message .. string.rep(" ", width - length - 3)
-		result = result .. pattern .. "\n" .. top_border
-		return result
-	end
-	message = split(message)
-	for index, word in ipairs(message) do
-		current_length = current_length + word:len() + 1
-		buffer = buffer .. word .. " "
-		if index + 1 > #message then
-			;
-		elseif current_length + message[index + 1]:len() > width - 4 then
-			buffer = buffer:sub(1, -2)
-			result = result .. buffer
-			result = result .. string.rep(" ", width - buffer:len() - 3)
-			result = result .. pattern .. "\n" .. pattern .. " "
-			buffer, current_length = "", 0
+	"pattern is string or nil")
+	width, pattern = width or 80, pattern or "*"
+	if pattern:len() == 0 then pattern = "*" end
+	pattern = pattern:sub(1)
+	if width < 5 then error("width is larger than 4 characters") end
+	local top_border, result = string.rep(pattern, width) .. "\n", {}
+	local temp, long_line, word_length, str_line
+	local current_line_length = 0
+	local message_length, str_result = message:len(), ""
+	width = width - 4
+	message = split(message:gsub("\t", mfr._TAB_REPRESENTATION), "\n")
+	for _, stuff_between_newlines in ipairs(message) do
+		temp = {}
+		long_line = split(stuff_between_newlines)
+		for __, word in ipairs(long_line) do
+			word_length = word:len()
+			if current_line_length + word_length < width then
+				table.insert(temp, word)
+				current_line_length = current_line_length + word_length + 1
+			else
+				table.insert(result, temp)
+				if word_length < width then
+					temp, current_line_length = {word}, word_length + 1
+				else
+					for _, line in ipairs(cut_string(word, width)) do
+						table.insert(result, {line,})
+					end
+					current_line_length = 0
+				end
+			end
 		end
+		if #temp > 0 then table.insert(result, temp); temp = {} end
 	end
-	result = result .. buffer:sub(1, -2) .. string.rep(" ", width - buffer:len() - 2)
-	return result .. pattern .. "\n".. top_border
+	for _, line in ipairs(result) do
+		str_line = table.concat(line, " ")
+		str_result = str_result .. pattern .. " " .. str_line
+		str_result = str_result .. string.rep(" ", width - str_line:len() + 1)
+		str_result = str_result .. pattern .. "\n"
+	end
+	return top_border .. str_result .. top_border
 end
 
 --- @section showing
@@ -146,7 +185,9 @@ function mfr.describe_fg_colors(is_forced)
 	end
 	local result, default_style, temp = "", mfr._FG_COLORS.default, {}
 	if mfr._cache._FG_COLORS_STRING then
-		io.write(mfr._cache._FG_COLORS_STRING)
+		if IS_UNDER_TESTING ~= true then
+			io.write(mfr._cache._FG_COLORS_STRING)
+		end
 		return
 	end
 	local max_key_len, key_length = 0
@@ -167,7 +208,9 @@ function mfr.describe_fg_colors(is_forced)
 		result = result .. default_style .. "\n"
 	end
 	mfr._cache._FG_COLORS_STRING = result
-	io.write(mfr._cache._FG_COLORS_STRING)
+	if IS_UNDER_TESTING ~= true then
+		io.write(mfr._cache._FG_COLORS_STRING)
+	end
 end
 
 --- send available background colors to stdout.
@@ -180,7 +223,9 @@ function mfr.describe_bg_colors(is_forced)
 		error("terminal does not support colors")
 	end
 	if mfr._cache._BG_COLORS_STRING then
-		io.write(mfr._cache._BG_COLORS_STRING)
+		if IS_UNDER_TESTING ~= true then
+			io.write(mfr._cache._BG_COLORS_STRING)
+		end
 		return
 	end
 	local result, default_style, temp = "", mfr._BG_COLORS.default, {}
@@ -202,7 +247,9 @@ function mfr.describe_bg_colors(is_forced)
 		result = result .. default_style .. "\n"
 	end
 	mfr._cache._BG_COLORS_STRING = result
-	io.write(mfr._cache._BG_COLORS_STRING)
+	if IS_UNDER_TESTING ~= true then
+		io.write(mfr._cache._BG_COLORS_STRING)
+	end
 end
 
 --- send available special styles to stdout.
@@ -215,7 +262,9 @@ function mfr.describe_special_styles(is_forced)
 		error("terminal does not support special styles")
 	end
 	if mfr._cache._SPECIAL_STYLES_STRING then
-		io.write(mfr._cache._SPECIAL_STYLES_STRING)
+		if IS_UNDER_TESTING ~= true then
+			io.write(mfr._cache._SPECIAL_STYLES_STRING)
+		end
 		return
 	end
 	local result, temp, max_key_len, key_length = "", {}, 0
@@ -233,7 +282,9 @@ function mfr.describe_special_styles(is_forced)
 		end
 	end
 	mfr._cache._SPECIAL_STYLES_STRING = result
-	io.write(mfr._cache._SPECIAL_STYLES_STRING)
+	if IS_UNDER_TESTING ~= true then
+		io.write(mfr._cache._SPECIAL_STYLES_STRING)
+	end
 end
 
 --- clear terminal screen.
@@ -391,4 +442,25 @@ function mfr.get_max_recursion()
 	return mfr._MAX_RECURSION
 end
 
+--- set tab representation.
+-- for instance, tab representation "    " (default value) means that tab 
+-- symbol will be substituted for 4 spaces in functions that need tab to have 
+-- stable length.
+-- @raise error if value param is not a string.
+-- @tparam string value new tab representation
+-- @see mfr.get_tab_representation
+-- @within settings
+function mfr.set_tab_representation(value)
+	local error_message = "set_tab_representation accepts only string argument"
+	assert(type(value) == "string", error_message)
+	mfr._TAB_REPRESENTATION = value
+end
+
+--- get tab representation.
+-- @treturn string current tab representation
+-- @see mfr.set_tab_representation
+-- @within settings
+function mfr.get_tab_representation()
+	return mfr._TAB_REPRESENTATION
+end
 return mfr

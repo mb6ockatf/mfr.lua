@@ -3,7 +3,7 @@
 <html>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <head>
-    <title>lua formatter</title>
+    <title>mfr.lua output formatter</title>
     <link rel="stylesheet" href="ldoc.css" type="text/css" />
 </head>
 <body>
@@ -24,12 +24,13 @@
 
 <div id="navigation">
 <br/>
-<h1>lfr</h1>
+<h1>mfr.lua</h1>
 
 
 
 <h2>Contents</h2>
 <ul>
+<li><a href="#Functions">Functions</a></li>
 <li><a href="#"> </a></li>
 <li><a href="#showing">showing</a></li>
 <li><a href="#settings">settings</a></li>
@@ -38,18 +39,25 @@
 
 <h2>Modules</h2>
 <ul class="nowrap">
-  <li><strong>lfr</strong></li>
+  <li><strong>mfr</strong></li>
 </ul>
 
 </div>
 
 <div id="content">
 
-<h1>Module <code>lfr</code></h1>
+<h1>Module <code>mfr</code></h1>
 <p>lua formatter</p>
 <p></p>
 
 
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#create_frame">create_frame (message, width, pattern)</a></td>
+	<td class="summary">create frame with message in terminal.</td>
+	</tr>
+</table>
 <h2><a href="#"> </a></h2>
 <table class="function_list">
 	<tr>
@@ -107,12 +115,12 @@
 	<td class="summary">get maximal recursion level.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#set_string_quoting">set_string_quoting (character)</a></td>
-	<td class="summary">set string quoting character.</td>
+	<td class="name" nowrap><a href="#set_tab_representation">set_tab_representation (value)</a></td>
+	<td class="summary">set tab representation.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#get_string_quoting">get_string_quoting ()</a></td>
-	<td class="summary">get string quoting character.</td>
+	<td class="name" nowrap><a href="#get_tab_representation">get_tab_representation ()</a></td>
+	<td class="summary">get tab representation.</td>
 	</tr>
 </table>
 
@@ -120,6 +128,51 @@
 <br/>
 
 
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "create_frame"></a>
+    <strong>create_frame (message, width, pattern)</strong>
+    </dt>
+    <dd>
+    create frame with message in terminal.
+ note that all tabs will be converted to character sequence defined by
+ `set_tab_representation` - 4 spaces is a default value.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">message</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
+         text to be displayed
+        </li>
+        <li><span class="parameter">width</span>
+            <span class="types"><span class="type">number</span></span>
+         width of the frame
+        </li>
+        <li><span class="parameter">pattern</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
+         pattern to be used to create frame
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
+        framed message
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="index.html#set_tab_representation">mfr.set_tab_representation</a>
+    </ul>
+
+
+</dd>
+</dl>
     <h2 class="section-header "><a name=""></a> </h2>
 
     <dl class="function">
@@ -201,7 +254,7 @@
 
     <h3>See also:</h3>
     <ul>
-         <a href="index.html#describe_bg_colors">lfr.describe_bg_colors</a>
+         <a href="index.html#describe_bg_colors">mfr.describe_bg_colors</a>
     </ul>
 
 
@@ -243,7 +296,7 @@
 
     <h3>See also:</h3>
     <ul>
-         <a href="index.html#describe_fg_colors">lfr.describe_fg_colors</a>
+         <a href="index.html#describe_fg_colors">mfr.describe_fg_colors</a>
     </ul>
 
 
@@ -285,7 +338,7 @@
 
     <h3>See also:</h3>
     <ul>
-         <a href="index.html#describe_special_styles">lfr.describe_special_styles</a>
+         <a href="index.html#describe_special_styles">mfr.describe_special_styles</a>
     </ul>
 
 
@@ -318,7 +371,7 @@
     <h3>Usage:</h3>
     <ul>
         <pre class="example">useless_list = {<span class="number">1</span>, <span class="number">2</span>, a = {<span class="string">"text"</span>, <span class="string">"text"</span>}}
-pretty_table = lfr.<span class="function-name">prettify_table</span>(useless_list))
+pretty_table = mfr.<span class="function-name">prettify_table</span>(useless_list))
 <span class="global">io</span>.<span class="function-name">write</span>(pretty_table)</pre>
     </ul>
 
@@ -344,7 +397,7 @@ pretty_table = lfr.<span class="function-name">prettify_table</span>(useless_lis
     <h3>Usage:</h3>
     <ul>
         <pre class="example">perfect_table = {<span class="number">1</span>, <span class="number">2</span>, a = {<span class="string">"text1"</span>, <span class="string">"text2"</span>}}
-lfr.<span class="function-name">pprint</span>(perfect_table)</pre>
+mfr.<span class="function-name">pprint</span>(perfect_table)</pre>
     </ul>
 
 </dd>
@@ -452,7 +505,7 @@ lfr.<span class="function-name">pprint</span>(perfect_table)</pre>
 
     <h3>See also:</h3>
     <ul>
-         <a href="index.html#set_max_recursion">lfr.set_max_recursion</a>
+         <a href="index.html#set_max_recursion">mfr.set_max_recursion</a>
     </ul>
 
 
@@ -476,44 +529,47 @@ lfr.<span class="function-name">pprint</span>(perfect_table)</pre>
 
     <h3>See also:</h3>
     <ul>
-         <a href="index.html#set_max_recursion">lfr.set_max_recursion</a>
+         <a href="index.html#set_max_recursion">mfr.set_max_recursion</a>
     </ul>
 
 
 </dd>
     <dt>
-    <a name = "set_string_quoting"></a>
-    <strong>set_string_quoting (character)</strong>
+    <a name = "set_tab_representation"></a>
+    <strong>set_tab_representation (value)</strong>
     </dt>
     <dd>
-    set string quoting character.
+    set tab representation.
+ for instance, tab representation "    " (default value) means that tab
+ symbol will be substituted for 4 spaces in functions that need tab to have
+ stable length.
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">character</span>
+        <li><span class="parameter">value</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
-         new quote character
+         new tab representation
         </li>
     </ul>
 
 
     <h3>Raises:</h3>
-    error if character param is not string.
+    error if value param is not a string.
 
     <h3>See also:</h3>
     <ul>
-         <a href="index.html#get_string_quoting">lfr.get_string_quoting</a>
+         <a href="index.html#get_tab_representation">mfr.get_tab_representation</a>
     </ul>
 
 
 </dd>
     <dt>
-    <a name = "get_string_quoting"></a>
-    <strong>get_string_quoting ()</strong>
+    <a name = "get_tab_representation"></a>
+    <strong>get_tab_representation ()</strong>
     </dt>
     <dd>
-    get string quoting character.
+    get tab representation.
 
 
 
@@ -521,13 +577,13 @@ lfr.<span class="function-name">pprint</span>(perfect_table)</pre>
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
-        quoting character
+        current tab representation
     </ol>
 
 
     <h3>See also:</h3>
     <ul>
-         <a href="index.html#set_string_quoting">lfr.set_string_quoting</a>
+         <a href="index.html#set_tab_representation">mfr.set_tab_representation</a>
     </ul>
 
 
@@ -539,7 +595,7 @@ lfr.<span class="function-name">pprint</span>(perfect_table)</pre>
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/lunarmodules/LDoc">LDoc 1.5.0</a></i>
-<i style="float:right;">Last updated 2023-07-09 19:00:21 </i>
+<i style="float:right;">Last updated 2023-07-11 21:08:17 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
