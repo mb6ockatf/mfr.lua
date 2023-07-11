@@ -11,6 +11,6 @@ use any functions from [docs/index.html](docs/index.html):
 mfr.describe_fg_colors()
 ```
 
-documentation also awailable on [github pages](mb6ockatf.github.io/mfr.lua/)
+documentation also awailable on [github pages](https://mb6ockatf.github.io/mfr.lua/)
 
 launch tests with `/test.lua`
