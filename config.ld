@@ -1,5 +1,5 @@
-title = "lua formatter"
-project = "lfr"
+title = "mfr.lua output formatter"
+project = "mfr.lua"
 not_luadoc = true
 boilerplate = false
-file = {"lfr.lua"}
+file = {"mfr.lua"}

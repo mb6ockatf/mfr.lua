@@ -1,11 +1,11 @@
 html { color: #000000; background: peachpuff;
-    font-family: 'Fira Code', 'Inconsolata', monospace;}
+	font-family: 'Fira Code', 'Inconsolata', monospace;}
 body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,button,textarea,p,blockquote,th,td {
-    margin: 0; padding: 0;}
+	margin: 0; padding: 0;}
 table { border-collapse: collapse; border-spacing: 0;}
 fieldset,img { border: 0; }
 address,caption,cite,code,dfn,em,strong,th,var,optgroup { font-style: inherit;
-    font-weight: inherit; }
+	font-weight: inherit; }
 del,ins { text-decoration: none; }
 li { margin-left: 20px; }
 caption,th { text-align: left; }
@@ -16,12 +16,12 @@ sup { vertical-align: baseline; }
 sub { vertical-align: baseline;}
 legend { color: #000;}
 input,button,textarea,select,optgroup,option {
-    font-family: inherit; font-size: inherit; font-style: inherit;
-    font-weight: inherit;}
+	font-family: inherit; font-size: inherit; font-style: inherit;
+	font-weight: inherit;}
 input,button,textarea,select {*font-size:100%;}
 body {margin-left: 1em; margin-right: 1em; margin: 0px;
-    font-family: 'Fira Code', 'Inconsolata', monospace;
-    background-color: peachpuff;}
+	font-family: 'Fira Code', 'Inconsolata', monospace;
+	background-color: peachpuff;}
 code, tt { font-family: monospace; font-size: 1.1em; }
 span.parameter { font-family: monospace; }
 span.parameter:after { content:":"; }
@@ -45,8 +45,8 @@ blockquote { margin-left: 3em; }
 ul { list-style-type: disc; }
 p.name { font-family: "Andale Mono", monospace; padding-top: 1em;}
 pre {background-color: gainsboro;
-    padding: 10px; margin: 10px 0 10px 0; overflow: auto;
-    font-family: "Andale Mono", monospace;}
+	padding: 10px; margin: 10px 0 10px 0; overflow: auto;
+	font-family: "Andale Mono", monospace;}
 pre.example {font-size: .85em; border-radius: 5px;}
 table { background-color: paleturquoise; border-radius: 5px;}
 table.index td { text-align: left; vertical-align: top; }
@@ -55,25 +55,25 @@ table.index td { text-align: left; vertical-align: top; }
 #product big {font-size: 2em;}
 #main {background-color: peachpuff;}
 #navigation {float: left; width: 14em; vertical-align: top;
-    background-color: peachpuff; overflow: visible;}
+	background-color: peachpuff; overflow: visible;}
 #navigation h2 {background-color: darkseagreen;
-    font-size:1.1em; color:#000000; text-align: left; padding:0.2em; border-radius: 5px;}
+	font-size:1.1em; color:#000000; text-align: left; padding:0.2em; border-radius: 5px;}
 #navigation ul {font-size:1em; list-style-type: none;
-    margin: 1px 1px 10px 1px;}
+	margin: 1px 1px 10px 1px;}
 #navigation li {text-indent: -1em; display: block; margin: 3px 0px 0px 22px;}
 #navigation li li a {margin: 0px 3px 0px -1em;}
 #content {margin-left: 14em; padding: 1em;
-    width: 700px; background-color: #ffffff;}
+	width: 700px; background-color: #ffffff;}
 #about {clear: both; padding: 5px; background-color: peachpuff;}
 @media print {
-    body {font: 12pt "Times New Roman", "TimeNR", Times, serif;}
-    a { font-weight: bold; color: #004080; text-decoration: underline; }
-    #main {background-color: #ffffff;border-left: 0px;}
-    #container {margin-left: 2%; margin-right: 2%; background-color: #ffffff;}
-    #content {padding: 1em; background-color: #ffffff;}
-    #navigation {display: none;}
-    pre.example {font-family: "Andale Mono", monospace;
-        font-size: 10pt; page-break-inside: avoid;}}
+	body {font: 12pt "Times New Roman", "TimeNR", Times, serif;}
+	a { font-weight: bold; color: #004080; text-decoration: underline; }
+	#main {background-color: #ffffff;border-left: 0px;}
+	#container {margin-left: 2%; margin-right: 2%; background-color: #ffffff;}
+	#content {padding: 1em; background-color: #ffffff;}
+	#navigation {display: none;}
+	pre.example {font-family: "Andale Mono", monospace;
+		font-size: 10pt; page-break-inside: avoid;}}
 table.module_list {border-collapse: collapse;}
 table.module_list td {padding: 3px;}
 table.module_list td.name { background-color: inherit; min-width: 200px; }

@@ -1,6 +1,6 @@
 #!/usr/bin/env lua
 --- lua formatter
--- @module lfr
+-- @module mfr
 
 --- check if element belongs to array
 -- @param element element to search for
@@ -21,14 +21,14 @@ local function compare(first, second) return first.value < second.value end
 --- recursively copy table.
 -- note that this is a recursive function.
 -- always check the data you process for safety! if `orig` is a table and is 
--- more nested than lfr._MAX_RECURSION, then `orig` will be copied up to
--- lfr._MAX_RECURSION nested level without warning.
+-- more nested than mfr._MAX_RECURSION, then `orig` will be copied up to
+-- mfr._MAX_RECURSION nested level without warning.
 -- @tparam any orig original value. if it is not a table-like object, it is 
 -- just returned
 -- @treturn any copy of orig (same type, as `orig` parameter)
 local function deepcopy(orig, _recursion_level)
 	if type(_recursion_level) == "nil" then _recursion_level = 0
-	elseif _recursion_level > lfr._MAX_RECURSION then return orig end
+	elseif _recursion_level > mfr._MAX_RECURSION then return orig end
 	_recursion_level = _recursion_level + 1
 	local orig_type, copy = type(orig)
 	if orig_type == 'table' then
@@ -75,7 +75,7 @@ local function execute_system_command(command)
 	return output
 end
 
-lfr = {_MAX_RECURSION = 5, _cache = {},
+mfr = {_MAX_RECURSION = 5, _cache = {},
 _FG_COLORS = {black = "\27[30m", red = "\27[31m", green = "\27[32m",
 orange = "\27[33m", blue = "\27[34m", purple = "\27[35m", cyan = "\27[36m",
 light_gray = "\27[37m", default = "\27[39m", dark_grey = "\27[90m",
@@ -98,14 +98,13 @@ nonegative = "\27[27m"},
 -- @tparam number width width of the frame
 -- @tparam string pattern pattern to be used to create frame
 -- @treturn string framed message
-function lfr.create_frame(message, width, pattern)
+function mfr.create_frame(message, width, pattern)
 	local list = {"table", "nil"}
 	assert(type(message) == "string", "message argument is string")
 	assert(belongs(type(width), {"number", "nil"}),
 	"size argument is table or nil")
 	assert(belongs(type(pattern), {"string", "nil"}),
 	"pattern argument is string or nil")
-	assert(belongs(type(position), list), "position argument is table or nil")
 	local length, current_length, buffer, top_border = message:len(), 0, ""
 	if width == nil then width = 80 end
 	if pattern == nil then pattern = "*" end
@@ -141,17 +140,17 @@ end
 -- not support colors.
 -- @raise if colors are not supported and is_forced is not true
 -- @within showing
-function lfr.describe_fg_colors(is_forced)
-	if not is_forced and not lfr.is_supporting_colors() then
+function mfr.describe_fg_colors(is_forced)
+	if not is_forced and not mfr.is_supporting_colors() then
 		error("terminal does not support colors")
 	end
-	local result, default_style, temp = "", lfr._FG_COLORS.default, {}
-	if lfr._cache._FG_COLORS_STRING then
-		io.write(lfr._cache._FG_COLORS_STRING)
+	local result, default_style, temp = "", mfr._FG_COLORS.default, {}
+	if mfr._cache._FG_COLORS_STRING then
+		io.write(mfr._cache._FG_COLORS_STRING)
 		return
 	end
 	local max_key_len, key_length = 0
-	for key, value in pairs(lfr._FG_COLORS) do
+	for key, value in pairs(mfr._FG_COLORS) do
 		key_length = key:len()
 		if key_length > max_key_len then
 			max_key_len = key_length
@@ -167,8 +166,8 @@ function lfr.describe_fg_colors(is_forced)
 		result = result .. " = " .. color.value:sub(2)
 		result = result .. default_style .. "\n"
 	end
-	lfr._cache._FG_COLORS_STRING = result
-	io.write(lfr._cache._FG_COLORS_STRING)
+	mfr._cache._FG_COLORS_STRING = result
+	io.write(mfr._cache._FG_COLORS_STRING)
 end
 
 --- send available background colors to stdout.
@@ -176,17 +175,17 @@ end
 -- not support colors.
 -- @raise if colors are not supported and is_forced is not true
 -- @within showing
-function lfr.describe_bg_colors(is_forced)
-	if not is_forced and not lfr.is_supporting_colors() then
+function mfr.describe_bg_colors(is_forced)
+	if not is_forced and not mfr.is_supporting_colors() then
 		error("terminal does not support colors")
 	end
-	if lfr._cache._BG_COLORS_STRING then
-		io.write(lfr._cache._BG_COLORS_STRING)
+	if mfr._cache._BG_COLORS_STRING then
+		io.write(mfr._cache._BG_COLORS_STRING)
 		return
 	end
-	local result, default_style, temp = "", lfr._BG_COLORS.default, {}
+	local result, default_style, temp = "", mfr._BG_COLORS.default, {}
 	local max_key_len, key_length = 0
-	for key, value in pairs(lfr._BG_COLORS) do
+	for key, value in pairs(mfr._BG_COLORS) do
 		key_length = key:len()
 		if key_length > max_key_len then
 			max_key_len = key_length
@@ -202,8 +201,8 @@ function lfr.describe_bg_colors(is_forced)
 		result = result .. " = " .. color.value:sub(2)
 		result = result .. default_style .. "\n"
 	end
-	lfr._cache._BG_COLORS_STRING = result
-	io.write(lfr._cache._BG_COLORS_STRING)
+	mfr._cache._BG_COLORS_STRING = result
+	io.write(mfr._cache._BG_COLORS_STRING)
 end
 
 --- send available special styles to stdout.
@@ -211,34 +210,34 @@ end
 -- not support colors.
 -- @raise if colors are not supported and is_forced is not true
 -- @within showing
-function lfr.describe_special_styles(is_forced)
-	if not is_forced and not lfr.is_supporting_colors() then
+function mfr.describe_special_styles(is_forced)
+	if not is_forced and not mfr.is_supporting_colors() then
 		error("terminal does not support special styles")
 	end
-	if lfr._cache._SPECIAL_STYLES_STRING then
-		io.write(lfr._cache._SPECIAL_STYLES_STRING)
+	if mfr._cache._SPECIAL_STYLES_STRING then
+		io.write(mfr._cache._SPECIAL_STYLES_STRING)
 		return
 	end
 	local result, temp, max_key_len, key_length = "", {}, 0
-	for key, _ in pairs(lfr._SPECIAL_STYLES) do
+	for key, _ in pairs(mfr._SPECIAL_STYLES) do
 		key_length = key:len()
 		if key_length > max_key_len then max_key_len = key_length end
 	end
-	for key, element in pairs(lfr._SPECIAL_STYLES) do
+	for key, element in pairs(mfr._SPECIAL_STYLES) do
 		local tab_length = max_key_len - key:len()
 		io.write(key.sub(1, 2))
 		if key:sub(1, 2) ~= "no" then
 			result = result .. element .. key .. string.rep(" ", tab_length)
 			result = result .. ": " .. element:sub(2)
-			result = result .. lfr._SPECIAL_STYLES["no" .. key] .. "\n"
+			result = result .. mfr._SPECIAL_STYLES["no" .. key] .. "\n"
 		end
 	end
-	lfr._cache._SPECIAL_STYLES_STRING = result
-	io.write(lfr._cache._SPECIAL_STYLES_STRING)
+	mfr._cache._SPECIAL_STYLES_STRING = result
+	io.write(mfr._cache._SPECIAL_STYLES_STRING)
 end
 
 --- clear terminal screen.
-function lfr.clear_screen()
+function mfr.clear_screen()
 	io.write("\27[2J\27[1;1H")
 	io.flush()
 end
@@ -246,18 +245,18 @@ end
 --- check if terminal supports colors.
 -- @treturn number number of supported colors
 -- @treturn boolean false if colors aren't supported
-function lfr.is_supporting_colors()
-	if lfr._cache._IS_SUPPORTING_COLORS then
-		return lfr._cache._IS_SUPPORTING_COLORS
+function mfr.is_supporting_colors()
+	if mfr._cache._IS_SUPPORTING_COLORS then
+		return mfr._cache._IS_SUPPORTING_COLORS
 	end
 	if package.config.sub(1, 1) == "\\" then return 16 end
 	local colors_number = tonumber(execute_system_command("tput colors")) 
 	colors_number = colors_number or 0
 	local no_colors = os.getenv("NO_COLOR")
 	if colors_number > 0 or no_colors ~= "true" then
-		lfr._cache._IS_SUPPORTING_COLORS = colors_number
-	else lfr._cache._IS_SUPPORTING_COLORS = false end
-	return lfr._cache._IS_SUPPORTING_COLORS
+		mfr._cache._IS_SUPPORTING_COLORS = colors_number
+	else mfr._cache._IS_SUPPORTING_COLORS = false end
+	return mfr._cache._IS_SUPPORTING_COLORS
 end
 
 --- apply background color to string.
@@ -268,14 +267,14 @@ end
 -- not supported
 -- @raise if colors are not supported and is_forced is not true
 -- @treturn string colorful message
--- @see lfr.describe_bg_colors
-function lfr.set_bg(message, color, is_closed, is_forced)
-	if not is_forced and not lfr.is_supporting_colors() then
+-- @see mfr.describe_bg_colors
+function mfr.set_bg(message, color, is_closed, is_forced)
+	if not is_forced and not mfr.is_supporting_colors() then
 		error("terminal does not support special styles")
 	end
-	local result = lfr._BG_COLORS[color] .. message
+	local result = mfr._BG_COLORS[color] .. message
 	if is_closed == nil then is_closed = true end
-	if is_closed then result = result .. lfr._BG_COLORS.default end
+	if is_closed then result = result .. mfr._BG_COLORS.default end
 	return  result
 end
 
@@ -286,12 +285,12 @@ end
 -- not supported
 -- @raise if colors are not supported and is_forced is not true
 -- @treturn string colorful message
--- @see lfr.describe_fg_colors
-function lfr.set_fg(message, color, is_forced)
-	if not is_forced and not lfr.is_supporting_colors() then
+-- @see mfr.describe_fg_colors
+function mfr.set_fg(message, color, is_forced)
+	if not is_forced and not mfr.is_supporting_colors() then
 		error("terminal does not support special styles")
 	end
-	return lfr._FG_COLORS[color] .. message .. lfr._FG_COLORS.default
+	return mfr._FG_COLORS[color] .. message .. mfr._FG_COLORS.default
 end
 
 --- apply special style to string.
@@ -301,33 +300,33 @@ end
 -- not supported
 -- @raise if colors are not supported and is_forced is not true
 -- @treturn string styled message
--- @see lfr.describe_special_styles
-function lfr.set_special_style(message, style, is_forced)
-	if not is_forced and not lfr.is_supporting_colors() then
+-- @see mfr.describe_special_styles
+function mfr.set_special_style(message, style, is_forced)
+	if not is_forced and not mfr.is_supporting_colors() then
 		error("terminal does not support special styles")
 	end
 	local closer
 	if style == "negative" then
-		closer = lfr._SPECIAL_STYLES["nonegative"]
+		closer = mfr._SPECIAL_STYLES["nonegative"]
 	elseif style == "bold" then
-		closer = lfr._SPECIAL_STYLES["nobold"]
+		closer = mfr._SPECIAL_STYLES["nobold"]
 	elseif styly == "underline" then
-		closer = lfr._SPECIAL_STYLES["nounderline"]
+		closer = mfr._SPECIAL_STYLES["nounderline"]
 	end
-	return lfr._SPECIAL_STYLES[style] .. message .. closer
+	return mfr._SPECIAL_STYLES[style] .. message .. closer
 end
 
 --- make a good-looking string out of a table.
 -- @usage
 -- useless_list = {1, 2, a = {"text", "text"}}
--- pretty_table = lfr.prettify_table(useless_list))
+-- pretty_table = mfr.prettify_table(useless_list))
 -- io.write(pretty_table)
 -- @tparam table ugly_table
 -- @treturn string pretty table ready to be sent to stdout
-function lfr.prettify_table(ugly_table, _recursion_level)
+function mfr.prettify_table(ugly_table, _recursion_level)
 	if type(_recursion_level) == "nil" then
 		_recursion_level = 0
-	elseif _recursion_level > lfr._MAX_RECURSION then
+	elseif _recursion_level > mfr._MAX_RECURSION then
 		_recursion_level = _recursion_level - 1
 	end
 	local nice_msg = string.rep("\t", _recursion_level - 1) .. "{\n"
@@ -337,14 +336,14 @@ function lfr.prettify_table(ugly_table, _recursion_level)
 	for key, value in pairs(ugly_table) do
 		key_type, value_type = type(key), type(value)
 		if key_type == "table" then
-			key = lfr.prettify_table(key, _recursion_level)
+			key = mfr.prettify_table(key, _recursion_level)
 		elseif key_type == "string" then
 			key = string.format('%q', key)
 		else
 			key = tostring(key)
 		end
 		if value_type == "table" then
-			value = lfr.prettify_table(value, _recursion_level)
+			value = mfr.prettify_table(value, _recursion_level)
 		elseif value_type == "string" then
 			value = string.format('%q', value)
 		else
@@ -359,11 +358,11 @@ end
 --- make a good-looking string out of anything.
 -- @usage
 -- perfect_table = {1, 2, a = {"text1", "text2"}}
--- lfr.pprint(perfect_table)
+-- mfr.pprint(perfect_table)
 -- @param object anything to be pretty-printed
-function lfr.pprint(object)
+function mfr.pprint(object)
 	local object_type, result = type(object)
-	if object_type == "table" then result = lfr.prettify_table(object, 0)
+	if object_type == "table" then result = mfr.prettify_table(object, 0)
 	else result = tostring(object) end
 	if IS_UNDER_TESTING ~= true then io.write(result) end
 end
@@ -375,21 +374,21 @@ end
 -- itself more than 7 times.
 -- @raise error if value param is not a signed number.
 -- @tparam number value new recursion level
--- @see lfr.set_max_recursion
+-- @see mfr.set_max_recursion
 -- @within settings
-function lfr.set_max_recursion(value)
+function mfr.set_max_recursion(value)
 	local error_message = "set_max_recursion accepts signed number argument"
 	assert(type(value) == "number", error_message)
 	if value < 0 then error(error_message) end
-	lfr._MAX_RECURSION = value
+	mfr._MAX_RECURSION = value
 end
 
 --- get maximal recursion level.
 -- @treturn number maximal recursion level
--- @see lfr.set_max_recursion
+-- @see mfr.set_max_recursion
 -- @within settings
-function lfr.get_max_recursion()
-	return lfr._MAX_RECURSION
+function mfr.get_max_recursion()
+	return mfr._MAX_RECURSION
 end
 
-return lfr
+return mfr
