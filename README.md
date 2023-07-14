@@ -13,4 +13,4 @@ mfr.describe_fg_colors()
 
 documentation also awailable on [github pages](https://mb6ockatf.github.io/mfr.lua/)
 
-launch tests with `/test.lua`
+launch tests with `./test.lua`

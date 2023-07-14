@@ -180,7 +180,8 @@ end
 -- @raise if colors are not supported and is_forced is not true
 -- @within showing
 function mfr.describe_fg_colors(is_forced)
-	if not is_forced and not mfr.is_supporting_colors() then
+	if is_forced == nil then is_forced = false end
+	if (not is_forced) and (not mfr.is_supporting_colors()) then
 		error("terminal does not support colors")
 	end
 	local result, default_style, temp = "", mfr._FG_COLORS.default, {}
@@ -289,7 +290,7 @@ end
 
 --- clear terminal screen.
 function mfr.clear_screen()
-	io.write("\27[2J\27[1;1H")
+	io.write("\27[3J\27[H\27[2J")
 	io.flush()
 end
 
@@ -304,7 +305,7 @@ function mfr.is_supporting_colors()
 	local colors_number = tonumber(execute_system_command("tput colors")) 
 	colors_number = colors_number or 0
 	local no_colors = os.getenv("NO_COLOR")
-	if colors_number > 0 or no_colors ~= "true" then
+	if colors_number > 0 and no_colors ~= "true" then
 		mfr._cache._IS_SUPPORTING_COLORS = colors_number
 	else mfr._cache._IS_SUPPORTING_COLORS = false end
 	return mfr._cache._IS_SUPPORTING_COLORS
