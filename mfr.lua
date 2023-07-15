@@ -2,96 +2,13 @@
 --- lua formatter
 -- @module mfr
 
---- check if element belongs to array
--- @param element element to search for
--- @tparam table sequence array to search in
--- @treturn boolean true if element exists in sequence, otherwise false
-local function belongs(element, sequence)
-	for i=1, #sequence, 1 do if element == sequence[i] then return true end end
-	return false
-end
-
-
---- cut string into slices of certain length.
--- @tparam string str string to be sliced
--- @tparam number length slices' length
--- @treturn table list of slices
-local function cut_string(str, length)
-	local result, counter = {"",}, 0
-	for character_index = 1, #str do
-		if counter < length then
-			counter = counter + 1
-			result[#result] = result[#result] .. str[character_index]
-		else
-			counter = 0
-			table.insert(result, str[character_index])
-		end
-	end
-	return result
-end
-
 --- compare tables when sorting.
 -- both arguments must contain `value` field.
 -- @tparam table first table to be compared with second table
 -- @tparam table second table to be compared with first table
 -- @treturn boolean true if first.value is less than second.value, else false
-local function compare(first, second) return first.value < second.value end
-
---- recursively copy table.
--- note that this is a recursive function.
--- always check the data you process for safety! if `orig` is a table and is 
--- more nested than mfr._MAX_RECURSION, then `orig` will be copied up to
--- mfr._MAX_RECURSION nested level without warning.
--- @tparam any orig original value. if it is not a table-like object, it is 
--- just returned
--- @treturn any copy of orig (same type, as `orig` parameter)
-local function deepcopy(orig, _recursion_level)
-	if type(_recursion_level) == "nil" then _recursion_level = 0
-	elseif _recursion_level > mfr._MAX_RECURSION then return orig end
-	_recursion_level = _recursion_level + 1
-	local orig_type, copy = type(orig)
-	if orig_type == 'table' then
-		copy = {}
-		for orig_key, orig_value in next, orig, nil do
-			copy[deepcopy(orig_key)] = deepcopy(orig_value, _recursion_level)
-		end
-		setmetatable(copy, deepcopy(getmetatable(orig), _recursion_level))
-	else  -- number, string, boolean, etc
-		copy = orig
-	end
-	return copy
-end
-	
---- split string by `separator` and return array.
--- @tparam string str text to be splitted by `separator`
--- @tparam string separator string to split `str` with
-local function split(str, separator)
-	if separator == nil then separator = " "
-	elseif type(separator) ~= "string" then
-		error("separator argument must be string")
-	end
-	local result, buffer, character = {}, ""
-	for i = 1, #str, 1 do
-		character = str:sub(i, i)
-		if character ~= separator then buffer = buffer .. character
-		else
-			table.insert(result, buffer)
-			buffer = ""
-		end
-	end
-	if buffer:len() > 0 then table.insert(result, buffer) end
-	return result
-end
-
---- execute system shell command.
--- @tparam string command command to be sent for execution
--- @treturn any shell answer. nil if command returned non-zero exit code 
--- (failed)
-local function execute_system_command(command)
-	local handle = io.popen(command)
-	local output = handle:read("*a")
-	handle:close()
-	return output
+local function compare(first, second)
+	return first.value < second.value
 end
 
 mfr = {
@@ -110,8 +27,109 @@ mfr = {
 	light_cyan = "\27[106m", light_white = "\27[107m"},
 	_SPECIAL_STYLES = {bold = "\27[1m", nobold = "\27[22m",
 	underline = "\27[4m", nounderline = "\27[24m", negative = "\27[7m",
-	nonegative = "\27[27m"},
+	nonegative = "\27[27m"}
 }
+
+--- cut string into slices of certain length.
+-- @tparam string str string to be sliced
+-- @tparam number length slices' length
+-- @treturn table list of slices
+function mfr.cut_string(str, length)
+	assert(type(str) == "string", "str argument is string")
+	assert(type(length) == "number", "length argument is number")
+	local result, counter = {""}, 0
+	for index = 1, #str do
+		if counter < length then
+			counter = counter + 1
+			result[#result] = result[#result] .. str:sub(index, index)
+		else
+			counter = 1
+			table.insert(result, str:sub(index, index))
+		end
+	end
+	return result
+end
+
+--- recursively copy table.
+-- note that this is a recursive function.
+-- always check the data you process for safety! if `orig` is a table and is 
+-- more nested than mfr._MAX_RECURSION, then `orig` will be copied up to
+-- mfr._MAX_RECURSION nested level without warning.
+-- @tparam any orig original value. if it is not a table-like object, it is 
+-- just returned
+-- @treturn any copy of orig (same type, as `orig` parameter)
+function mfr.deepcopy(orig, _recursion_level)
+	if type(_recursion_level) == "nil" then _recursion_level = 0
+	elseif _recursion_level > mfr._MAX_RECURSION then
+		return orig
+	end
+	_recursion_level = _recursion_level + 1
+	local new_key
+	local orig_type, copy = type(orig)
+	if orig_type == 'table' then
+		copy = {}
+		for orig_key, orig_value in next, orig, nil do
+			new_key = mfr.deepcopy(orig_key)
+			copy[new_key] = mfr.deepcopy(orig_value, _recursion_level)
+		end
+		setmetatable(copy, mfr.deepcopy(getmetatable(orig), _recursion_level))
+	else  -- number, string, boolean, etc
+		copy = orig
+	end
+	return copy
+end
+
+
+--- check if element belongs to array
+-- @param element element to search for
+-- @tparam table sequence array to search in
+-- @treturn boolean true if element exists in sequence, otherwise false
+function mfr.belongs(element, sequence)
+	for i = 1, #sequence, 1 do
+		if element == sequence[i] then
+			return true
+		end
+	end
+	return false
+end
+
+--- split string by `separator` and return array.
+-- @tparam string str text to be splitted by `separator`
+-- @tparam string separator string to split `str` with
+local function split(str, separator)
+	if separator == nil then separator = " "
+	elseif type(separator) ~= "string" then
+		error("separator argument must be string")
+	end
+	local character
+	local result, buffer = {}, ""
+	for i = 1, #str, 1 do
+		character = str:sub(i, i)
+		if character ~= separator then buffer = buffer .. character
+		else
+			table.insert(result, buffer)
+			buffer = ""
+		end
+	end
+	if buffer:len() > 0 then table.insert(result, buffer) end
+	return result
+end
+
+--- execute system shell command.
+-- @tparam string command command to be sent for execution
+-- @treturn any shell answer. nil if command returned non-zero exit code
+-- (failed)
+function mfr.execute_system_command(command)
+	assert(type(command) == "string", "command argument is string")
+	local handle = io.popen(command)
+	if handle then
+		local output = handle:read("*a")
+		handle:close()
+		return output
+	end
+	return nil
+end
+
 
 --- create frame with message in terminal.
 -- note that all tabs will be converted to character sequence defined by
@@ -122,14 +140,13 @@ mfr = {
 -- @treturn string framed message
 -- @see mfr.set_tab_representation
 function mfr.create_frame(message, width, pattern)
-	local list = {"table", "nil"}
 	if type(message) == "table" and not width and not pattern then
 		pattern, width = message.pattern, message.width
 		message = message.message
 	end
 	assert(type(message) == "string", "message argument is string")
-	assert(belongs(type(width), {"number", "nil"}), "width is table or nil")
-	assert(belongs(type(pattern), {"string", "nil"}),
+	assert(mfr.belongs(type(width), {"number", "nil"}), "width is table or nil")
+	assert(mfr.belongs(type(pattern), {"string", "nil"}),
 	"pattern is string or nil")
 	width, pattern = width or 80, pattern or "*"
 	if pattern:len() == 0 then pattern = "*" end
@@ -138,7 +155,7 @@ function mfr.create_frame(message, width, pattern)
 	local top_border, result = string.rep(pattern, width) .. "\n", {}
 	local temp, long_line, word_length, str_line
 	local current_line_length = 0
-	local message_length, str_result = message:len(), ""
+	local str_result = ""
 	width = width - 4
 	message = split(message:gsub("\t", mfr._TAB_REPRESENTATION), "\n")
 	for _, stuff_between_newlines in ipairs(message) do
@@ -154,7 +171,7 @@ function mfr.create_frame(message, width, pattern)
 				if word_length < width then
 					temp, current_line_length = {word}, word_length + 1
 				else
-					for _, line in ipairs(cut_string(word, width)) do
+					for _, line in ipairs(mfr.cut_string(word, width)) do
 						table.insert(result, {line,})
 					end
 					current_line_length = 0
@@ -175,11 +192,11 @@ end
 --- @section showing
 
 --- send available foreground colors to stdout.
--- @tparam boolean is_forced if true, output is provided even if terminal does 
+-- @tparam boolean is_forced if true, output is provided even if terminal does
 -- not support colors.
 -- @raise if colors are not supported and is_forced is not true
 -- @within showing
-function mfr.describe_fg_colors(is_forced)
+function mfr.describe_fg_colors(is_forced)  -- io operations, not to be tested
 	if is_forced == nil then is_forced = false end
 	if (not is_forced) and (not mfr.is_supporting_colors()) then
 		error("terminal does not support colors")
@@ -191,7 +208,8 @@ function mfr.describe_fg_colors(is_forced)
 		end
 		return
 	end
-	local max_key_len, key_length = 0
+	local key_length, value_table
+	local max_key_len = 0
 	for key, value in pairs(mfr._FG_COLORS) do
 		key_length = key:len()
 		if key_length > max_key_len then
@@ -219,7 +237,7 @@ end
 -- not support colors.
 -- @raise if colors are not supported and is_forced is not true
 -- @within showing
-function mfr.describe_bg_colors(is_forced)
+function mfr.describe_bg_colors(is_forced)  -- io operations, not to be tested
 	if not is_forced and not mfr.is_supporting_colors() then
 		error("terminal does not support colors")
 	end
@@ -230,7 +248,8 @@ function mfr.describe_bg_colors(is_forced)
 		return
 	end
 	local result, default_style, temp = "", mfr._BG_COLORS.default, {}
-	local max_key_len, key_length = 0
+	local key_length, value_table
+	local max_key_len = 0
 	for key, value in pairs(mfr._BG_COLORS) do
 		key_length = key:len()
 		if key_length > max_key_len then
@@ -259,6 +278,7 @@ end
 -- @raise if colors are not supported and is_forced is not true
 -- @within showing
 function mfr.describe_special_styles(is_forced)
+	-- io operations, not to be tested
 	if not is_forced and not mfr.is_supporting_colors() then
 		error("terminal does not support special styles")
 	end
@@ -268,7 +288,8 @@ function mfr.describe_special_styles(is_forced)
 		end
 		return
 	end
-	local result, temp, max_key_len, key_length = "", {}, 0
+	local key_length
+	local result, max_key_len = "", 0
 	for key, _ in pairs(mfr._SPECIAL_STYLES) do
 		key_length = key:len()
 		if key_length > max_key_len then max_key_len = key_length end
@@ -289,7 +310,7 @@ function mfr.describe_special_styles(is_forced)
 end
 
 --- clear terminal screen.
-function mfr.clear_screen()
+function mfr.clear_screen()  -- io operations, not to be tested
 	io.write("\27[3J\27[H\27[2J")
 	io.flush()
 end
@@ -301,11 +322,12 @@ function mfr.is_supporting_colors()
 	if mfr._cache._IS_SUPPORTING_COLORS then
 		return mfr._cache._IS_SUPPORTING_COLORS
 	end
-	if package.config.sub(1, 1) == "\\" then return 16 end
-	local colors_number = tonumber(execute_system_command("tput colors")) 
+	if package.config:sub(1, 1) == "\\" then
+		return 16
+	end
+	local colors_number = tonumber(mfr._execute_system_command("tput colors"))
 	colors_number = colors_number or 0
-	local no_colors = os.getenv("NO_COLOR")
-	if colors_number > 0 and no_colors ~= "true" then
+	if colors_number > 0 and os.getenv("NO_COLOR") ~= "true" then
 		mfr._cache._IS_SUPPORTING_COLORS = colors_number
 	else mfr._cache._IS_SUPPORTING_COLORS = false end
 	return mfr._cache._IS_SUPPORTING_COLORS
@@ -362,7 +384,7 @@ function mfr.set_special_style(message, style, is_forced)
 		closer = mfr._SPECIAL_STYLES["nonegative"]
 	elseif style == "bold" then
 		closer = mfr._SPECIAL_STYLES["nobold"]
-	elseif styly == "underline" then
+	elseif style == "underline" then
 		closer = mfr._SPECIAL_STYLES["nounderline"]
 	end
 	return mfr._SPECIAL_STYLES[style] .. message .. closer
@@ -412,11 +434,16 @@ end
 -- perfect_table = {1, 2, a = {"text1", "text2"}}
 -- mfr.pprint(perfect_table)
 -- @param object anything to be pretty-printed
-function mfr.pprint(object)
+function mfr.pprint(object)  -- io operations, not to be tested
 	local object_type, result = type(object)
-	if object_type == "table" then result = mfr.prettify_table(object, 0)
-	else result = tostring(object) end
-	if IS_UNDER_TESTING ~= true then io.write(result) end
+	if object_type == "table" then
+		result = mfr.prettify_table(object, 0)
+	else
+		result = tostring(object)
+	end
+	if IS_UNDER_TESTING ~= true then
+		io.write(result)
+	end
 end
 
 --- @section settings

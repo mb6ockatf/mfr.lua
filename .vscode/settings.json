@@ -1,0 +1,17 @@
+{
+    "Lua.diagnostics.globals": [
+        "describe",
+        "it",
+        "spy",
+        "mfr",
+        "expose",
+        "insulate",
+        "mock"
+    ],
+    "Lua.diagnostics.disable": [
+        "duplicate-set-field"
+    ],
+    "editor.tabCompletion": "on",
+    "diffEditor.codeLens": true,
+    "MutableAI.upsell": false
+}
