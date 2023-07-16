@@ -31,10 +31,10 @@
 <h2>Contents</h2>
 <ul>
 <li><a href="#Functions">Functions</a></li>
-<li><a href="#"> </a></li>
+<li><a href="#system">system</a></li>
+<li><a href="#color_setters">color setters</a></li>
+<li><a href="#prettifyers">prettifyers</a></li>
 <li><a href="#showing">showing</a></li>
-<li><a href="#showing___io_operations__not_to_be_tested">showing.
- io operations, not to be tested</a></li>
 <li><a href="#settings">settings</a></li>
 </ul>
 
@@ -65,23 +65,26 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#belongs">belongs (element, sequence)</a></td>
-	<td class="summary">check if element belongs to array</td>
+	<td class="summary">check if element belongs to array.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#create_frame">create_frame (message, width, pattern)</a></td>
-	<td class="summary">create frame with message in terminal.</td>
+	<td class="name" nowrap><a href="#split">split (str, separator)</a></td>
+	<td class="summary">split string by `separator` and return array.</td>
 	</tr>
 </table>
-<h2><a href="#"> </a></h2>
+<h2><a href="#system">system</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#clear_screen">clear_screen ()</a></td>
-	<td class="summary">clear terminal screen.</td>
+	<td class="name" nowrap><a href="#execute_system_command">execute_system_command (command)</a></td>
+	<td class="summary">execute system shell command.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#is_supporting_colors">is_supporting_colors ()</a></td>
 	<td class="summary">check if terminal supports colors.</td>
 	</tr>
+</table>
+<h2><a href="#color_setters">color setters</a></h2>
+<table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#set_bg">set_bg (message, color, is_closed, is_forced)</a></td>
 	<td class="summary">apply background color to string.</td>
@@ -94,6 +97,13 @@
 	<td class="name" nowrap><a href="#set_special_style">set_special_style (message, style, is_forced)</a></td>
 	<td class="summary">apply special style to string.</td>
 	</tr>
+</table>
+<h2><a href="#prettifyers">prettifyers</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#clear_screen">clear_screen ()</a></td>
+	<td class="summary">clear terminal screen.</td>
+	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#prettify_table">prettify_table (ugly_table)</a></td>
 	<td class="summary">make a good-looking string out of a table.</td>
@@ -101,6 +111,18 @@
 	<tr>
 	<td class="name" nowrap><a href="#pprint">pprint (object)</a></td>
 	<td class="summary">make a good-looking string out of anything.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#create_frame">create_frame (message, width, pattern)</a></td>
+	<td class="summary">create frame with message in terminal.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#create_line_borders">create_line_borders (text, length, border)</a></td>
+	<td class="summary">create line borders.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#create_page_borders">create_page_borders (message, width, pattern)</a></td>
+	<td class="summary">create page borders.</td>
 	</tr>
 </table>
 <h2><a href="#showing">showing</a></h2>
@@ -113,10 +135,6 @@
 	<td class="name" nowrap><a href="#describe_bg_colors">describe_bg_colors (is_forced)</a></td>
 	<td class="summary">send available background colors to stdout.</td>
 	</tr>
-</table>
-<h2><a href="#showing___io_operations__not_to_be_tested">showing.
- io operations, not to be tested</a></h2>
-<table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#describe_special_styles">describe_special_styles (is_forced)</a></td>
 	<td class="summary">send available special styles to stdout.</td>
@@ -176,6 +194,10 @@
         list of slices
     </ol>
 
+    <h3>Raises:</h3>
+
+ if str is not a string
+ if length is not a number
 
 
 
@@ -217,7 +239,7 @@
     <strong>belongs (element, sequence)</strong>
     </dt>
     <dd>
-    check if element belongs to array
+    check if element belongs to array.
 
 
     <h3>Parameters:</h3>
@@ -238,65 +260,75 @@
         true if element exists in sequence, otherwise false
     </ol>
 
+    <h3>Raises:</h3>
+    if sequence is not a table
 
 
 
 </dd>
     <dt>
-    <a name = "create_frame"></a>
-    <strong>create_frame (message, width, pattern)</strong>
+    <a name = "split"></a>
+    <strong>split (str, separator)</strong>
     </dt>
     <dd>
-    create frame with message in terminal.
- note that all tabs will be converted to character sequence defined by
- `set_tab_representation` - 4 spaces is a default value.
+    split string by `separator` and return array.
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">message</span>
+        <li><span class="parameter">str</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
-         text to be displayed
+         text to be splitted by `separator`
         </li>
-        <li><span class="parameter">width</span>
-            <span class="types"><span class="type">number</span></span>
-         width of the frame
-        </li>
-        <li><span class="parameter">pattern</span>
+        <li><span class="parameter">separator</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
-         pattern to be used to create frame
+         string to split `str` with
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
-        framed message
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.6">table</a></span>
+        array of splitted strings.
     </ol>
 
+    <h3>Raises:</h3>
+    if str is not a string or separator is not a string and not nil.
 
-    <h3>See also:</h3>
-    <ul>
-         <a href="index.html#set_tab_representation">mfr.set_tab_representation</a>
-    </ul>
 
 
 </dd>
 </dl>
-    <h2 class="section-header "><a name=""></a> </h2>
+    <h2 class="section-header "><a name="system"></a>system</h2>
 
     <dl class="function">
     <dt>
-    <a name = "clear_screen"></a>
-    <strong>clear_screen ()</strong>
+    <a name = "execute_system_command"></a>
+    <strong>execute_system_command (command)</strong>
     </dt>
     <dd>
-    clear terminal screen.
+    execute system shell command.
 
 
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">command</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
+         command to be sent for execution
+        </li>
+    </ul>
 
+    <h3>Returns:</h3>
+    <ol>
 
+           <span class="types"><span class="type">any</span></span>
+        shell answer. nil if command returned non-zero exit code
+ (failed)
+    </ol>
+
+    <h3>Raises:</h3>
+    if command is not a string
 
 
 
@@ -324,6 +356,10 @@
 
 
 </dd>
+</dl>
+    <h2 class="section-header "><a name="color_setters"></a>color setters</h2>
+
+    <dl class="function">
     <dt>
     <a name = "set_bg"></a>
     <strong>set_bg (message, color, is_closed, is_forced)</strong>
@@ -336,7 +372,8 @@
     <ul>
         <li><span class="parameter">message</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
-         string apply background color to
+         string apply background color to (or table, if
+ passing all arguments as 1 table). see usage for more
         </li>
         <li><span class="parameter">color</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
@@ -368,6 +405,12 @@
          <a href="index.html#describe_bg_colors">mfr.describe_bg_colors</a>
     </ul>
 
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">mfr.<span class="function-name">apply_bg_color</span>(<span class="string">"hello"</span>, <span class="string">"red"</span>)
+mfr.<span class="function-name">apply_bg_color</span>{message = <span class="string">"message"</span>, color = <span class="string">"red"</span>, is_closed = <span class="keyword">true</span>,
+is_forced = <span class="keyword">false</span>}</pre>
+    </ul>
 
 </dd>
     <dt>
@@ -454,6 +497,25 @@
 
 
 </dd>
+</dl>
+    <h2 class="section-header "><a name="prettifyers"></a>prettifyers</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "clear_screen"></a>
+    <strong>clear_screen ()</strong>
+    </dt>
+    <dd>
+    clear terminal screen.
+ please, use with caution.
+
+
+
+
+
+
+
+</dd>
     <dt>
     <a name = "prettify_table"></a>
     <strong>prettify_table (ugly_table)</strong>
@@ -477,6 +539,8 @@
         pretty table ready to be sent to stdout
     </ol>
 
+    <h3>Raises:</h3>
+    error if ugly_table is not a table.
 
 
     <h3>Usage:</h3>
@@ -510,6 +574,146 @@ pretty_table = mfr.<span class="function-name">prettify_table</span>(useless_lis
         <pre class="example">perfect_table = {<span class="number">1</span>, <span class="number">2</span>, a = {<span class="string">"text1"</span>, <span class="string">"text2"</span>}}
 mfr.<span class="function-name">pprint</span>(perfect_table)</pre>
     </ul>
+
+</dd>
+    <dt>
+    <a name = "create_frame"></a>
+    <strong>create_frame (message, width, pattern)</strong>
+    </dt>
+    <dd>
+    create frame with message in terminal.
+ note that all tabs will be converted to character sequence defined by
+ `set_tab_representation` - 4 spaces is a default value.
+ please, note that pattern param is cut, and only its 1st symbol is used.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">message</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
+         text to be displayed
+        </li>
+        <li><span class="parameter">width</span>
+            <span class="types"><span class="type">number</span></span>
+         width of the frame
+        </li>
+        <li><span class="parameter">pattern</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
+         pattern to be used to create frame
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
+        framed message
+    </ol>
+
+    <h3>Raises:</h3>
+    if message is not a string, or width is not a number, or pattern is
+ not a string
+
+    <h3>See also:</h3>
+    <ul>
+         <li><a href="index.html#set_tab_representation">mfr.set_tab_representation</a></li>
+         <li><a href="index.html#create_line_borders">mfr.create_line_borders</a></li>
+         <li><a href="index.html#create_page_borders">mfr.create_page_borders</a></li>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "create_line_borders"></a>
+    <strong>create_line_borders (text, length, border)</strong>
+    </dt>
+    <dd>
+    create line borders.
+ note that all tabs will be converted to character sequence defined by
+ `set_tab_representation` - 4 spaces is a default value.
+ please, note that border param is cut, and only its 1st symbol is used.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">text</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
+         text to be displayed put inside borders
+        </li>
+        <li><span class="parameter">length</span>
+            <span class="types"><span class="type">number</span></span>
+         length of the frame
+        </li>
+        <li><span class="parameter">border</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
+         border to put text into
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
+        bordered text
+    </ol>
+
+    <h3>Raises:</h3>
+    if text is not a string, or length is not a number, or border is not
+ a string
+
+    <h3>See also:</h3>
+    <ul>
+         <li><a href="index.html#set_tab_representation">mfr.set_tab_representation</a></li>
+         <li><a href="index.html#create_frame">mfr.create_frame</a></li>
+         <li><a href="index.html#create_page_borders">mfr.create_page_borders</a></li>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "create_page_borders"></a>
+    <strong>create_page_borders (message, width, pattern)</strong>
+    </dt>
+    <dd>
+    create page borders.
+ note that all tabs will be converted to character sequence defined by
+ `set_tab_representation` - 4 spaces is a default value.
+ please, note that pattern param is cut, and only its 1st symbol is used.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">message</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
+         message to be displayed put inside borders
+        </li>
+        <li><span class="parameter">width</span>
+            <span class="types"><span class="type">number</span></span>
+         width of the page
+        </li>
+        <li><span class="parameter">pattern</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
+         border pattern to put message into
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.4/manual.html#6.4">string</a></span>
+        bordered page of text
+    </ol>
+
+    <h3>Raises:</h3>
+    if message is not a string
+
+    <h3>See also:</h3>
+    <ul>
+         <li><a href="index.html#set_tab_representation">mfr.set_tab_representation</a></li>
+         <li><a href="index.html#create_frame">mfr.create_frame</a></li>
+         <li><a href="index.html#create_line_borders">mfr.create_line_borders</a></li>
+    </ul>
+
 
 </dd>
 </dl>
@@ -564,11 +768,6 @@ mfr.<span class="function-name">pprint</span>(perfect_table)</pre>
 
 
 </dd>
-</dl>
-    <h2 class="section-header "><a name="showing___io_operations__not_to_be_tested"></a>showing.
- io operations, not to be tested</h2>
-
-    <dl class="function">
     <dt>
     <a name = "describe_special_styles"></a>
     <strong>describe_special_styles (is_forced)</strong>
@@ -711,7 +910,7 @@ mfr.<span class="function-name">pprint</span>(perfect_table)</pre>
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/lunarmodules/LDoc">LDoc 1.5.0</a></i>
-<i style="float:right;">Last updated 2023-07-15 14:29:43 </i>
+<i style="float:right;">Last updated 2023-07-16 17:10:40 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
