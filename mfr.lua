@@ -87,6 +87,17 @@ function mfr.belongs(element, sequence)
 	return false
 end
 
+--- split string by whitespaces.
+-- note that this function works faster than `mfr.split` with separator=" ".
+-- @tparam string str string to be splitted
+-- @treturn table array of strings
+function mfr.space_split(str)
+	assert(type(str) == "string", "str argument is string")
+	local result = {}
+	for item in str:gmatch("%S*") do table.insert(result, item) end
+	return result
+end
+
 --- split string by `separator` and return array.
 -- @tparam string str text to be splitted by `separator`
 -- @tparam string separator string to split `str` with
