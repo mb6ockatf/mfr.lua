@@ -3,6 +3,7 @@
         "describe",
         "it",
         "setup",
-        "teardown"
+        "teardown",
+        "expose"
     ]
 }
