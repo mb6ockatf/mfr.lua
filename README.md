@@ -2,7 +2,7 @@
 
 output formatter written in lua
 
-download this module via luarocks: `luarocks install mfr.lua`
+download this module via luarocks: `luarocks install mfr`
 
 import with `mfr = require("mfr")`
 
