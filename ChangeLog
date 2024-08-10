@@ -1,0 +1,140 @@
+commit c1e3068f897fa0c9269665d626e700693aba58f9
+Author: mb6ockatf <mdddmmmm@yandex.ru>
+Date:   Sat Aug 10 16:03:21 2024 +0300
+
+    chore(CONTRIBUTING): added
+
+commit d19e0ad814217aad1cc1551b763bd44dafc3bf5a
+Author: mb6ockatf <mdddmmmm@yandex.ru>
+Date:   Fri Aug 9 20:58:28 2024 +0300
+
+    chore(COPYING): AGPL
+
+commit c441d947ff7866b748c1a1858add1f4aed0b178d
+Author: mb6ockatf <mdddmmmm@ya.ru>
+Date:   Thu Jul 27 22:42:33 2023 +0300
+
+    v1.0-3
+
+commit 297e39069724886bc92fdca29544986e21000e5a
+Author: mb6ockatf <mb6ockatf@relay.firefox.com>
+Date:   Thu Jul 27 22:40:29 2023 +0300
+
+    Update mfr-1.0-2.rockspec
+
+commit a24beb58ab65b4b1d69d09cce36c2d354a3158dd
+Author: mb6ockatf <mdddmmmm@ya.ru>
+Date:   Thu Jul 27 21:39:53 2023 +0300
+
+    feat: v1.0-2
+
+commit 72837d4f3bf314a21c932f00bb9b4cc2c1b51eac
+Author: mb6ockatf <mb6ockatf@relay.firefox.com>
+Date:   Thu Jul 27 21:18:15 2023 +0300
+
+    fix: misprint in README.md
+
+commit 4cbccd2ea29899850fe0fd59ef9141cbba2d980d
+Author: mb6ockatf <mdddmmmm@ya.ru>
+Date:   Tue Jul 18 17:49:55 2023 +0300
+
+    feat: space_split function
+    
+    added .gitignore file
+
+commit f2638fb17a746ab352ea601a0f740c666cd109ba
+Author: mb6ockatf <mdddmmmm@ya.ru>
+Date:   Sun Jul 16 17:21:57 2023 +0300
+
+    docs: update README.md
+
+commit 91ee8afe57566b063e4900d893f1062f8a0040f4
+Author: mb6ockatf <mdddmmmm@ya.ru>
+Date:   Sun Jul 16 17:12:45 2023 +0300
+
+    test: everything
+    
+    resolve #9
+    resolve #10
+    resolve #11
+    resolve #13
+    resolve #14
+    resolve #15
+
+commit 83be594b8a4a441f40debae542d7376e77e8ce8b
+Author: mb6ockatf <mdddmmmm@ya.ru>
+Date:   Sat Jul 15 15:30:33 2023 +0300
+
+    test: cut_string
+
+commit f08165a79d70859c76bd129322f92c8cc3b4fe69
+Author: mb6ockatf <mdddmmmm@ya.ru>
+Date:   Fri Jul 14 21:59:54 2023 +0300
+
+    test: describe colors, clear screen
+    
+    resolves #4 #5 #6 #7
+    - fix misprint in README.md
+    - fix minor errors in mfr.lua
+
+commit cab17939f7907a78e0a62458426b1221ad244af2
+Author: mb6ockatf <mb6ockatf@relay.firefox.com>
+Date:   Tue Jul 11 21:11:48 2023 +0300
+
+    fix(README.md): link to gh pages
+
+commit 4d4399e019006323ffad47962a40fa030c63cf32
+Author: mb6ockatf <mb6ockatf@relay.firefox.com>
+Date:   Tue Jul 11 21:09:32 2023 +0300
+
+    test: create_frame
+
+commit 9dd5e6f6cc3207c85ae7e2d9138f6cc802c4af87
+Author: mb6ockatf <mb6ockatf@relay.firefox.com>
+Date:   Tue Jul 11 14:39:39 2023 +0300
+
+    feat: README.md updated
+
+commit fbf1f7b313bebf68becd7e56c2b64b68c359258f
+Author: mb6ockatf <mb6ockatf@relay.firefox.com>
+Date:   Mon Jul 10 22:33:09 2023 +0300
+
+    feat: create_frame
+    
+    resolve #1
+
+commit bbd538193c9e8eb21e1c4f0a1ad6a9962f2a2ee2
+Author: mb6ockatf <mb6ockatf@relay.firefox.com>
+Date:   Mon Jul 10 19:02:03 2023 +0300
+
+    fix: improve argument checking
+
+commit ef9b3af499a6b90cd499a3bafac5d2b3f5ae140f
+Author: mb6ockatf <mb6ockatf@relay.firefox.com>
+Date:   Sat Jul 8 21:29:59 2023 +0300
+
+    feat: ascii control sequences
+
+commit 32a2b578153143008de2a1065c27ad7798bd3450
+Author: mb6ockatf <mb6ockatf@relay.firefox.com>
+Date:   Thu Jul 6 15:30:17 2023 +0000
+
+    feat(docs)
+
+commit 4dbcb8b3a67dedab85c550ffc44c471a8241d982
+Author: mb6ockatf <mb6ockatf@relay.firefox.com>
+Date:   Wed Jul 5 20:53:48 2023 +0000
+
+    feat: add luarocks template
+
+commit 85765cd94b676398c6363bd92bd1f473004762b2
+Author: mb6ockatf <mb6ockatf@relay.firefox.com>
+Date:   Tue Jul 4 19:20:50 2023 +0300
+
+    test: add some busted tests
+
+commit fbd045435b1f81a7c76388dae5bda332575f553b
+Author: mb6ockatf <mb6ockatf@relay.firefox.com>
+Date:   Tue Jul 4 19:20:27 2023 +0300
+
+    feat: prettify_table, pprint
