@@ -25,3 +25,12 @@ too.
 
 this repository is open for contribution. you're welcome to submit ideas & bug
 reports at *issues* tab, too
+
+## license
+
+Copyright (C) 2023-2024 mb6ockatf
+
+mfr.lua is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or (at
+your option) any later version.  See COPYING.LESSER and COPYING.

@@ -7,7 +7,7 @@ description = {
    summary = "output formatter",
    detailed = "simple lua module with functions for output prettifying",
    homepage = "https://mb6ockatf.github.io/mfr.lua/",
-   license = "AGPL-3.0"
+   license = "LGPL-3.0-or-later"
 }
 dependencies = {
    "lua >= 5.1"
