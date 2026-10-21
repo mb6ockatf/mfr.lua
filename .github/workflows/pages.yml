@@ -1,0 +1,59 @@
+# pages.yml - publish the ldoc API documentation on GitHub Pages.
+#
+# Copyright (C) 2026 mb6ockatf
+# This file is free software; see COPYING for copying conditions.
+#
+# Builds the same pages as gendocs.sh, into _site rather than docs/,
+# from master and deploys them.  Pages must be enabled once by hand:
+# Settings > Pages > Build and deployment > Source: GitHub Actions.
+
+name: Documentation
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'mfr.lua'
+      - 'config.ld'
+      - 'style/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build the documentation
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: leafo/gh-actions-lua@v13
+        with:
+          luaVersion: '5.4'
+      - uses: leafo/gh-actions-luarocks@v6
+      - name: Install ldoc
+        run: luarocks install ldoc
+      - name: ldoc
+        run: ldoc . --style style --dir _site
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

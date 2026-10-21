@@ -1,0 +1,50 @@
+# release.yml - upload the rockspec to LuaRocks when a version tag is pushed.
+#
+# Copyright (C) 2026 mb6ockatf
+# This file is free software; see COPYING for copying conditions.
+#
+# Pushing a tag vX.Y-R uploads mfr-X.Y-R.rockspec; the tag must name an
+# existing rockspec.  The upload needs a LUAROCKS_API_KEY repository
+# secret (https://luarocks.org/settings/api-keys) and is skipped without
+# one.
+
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+jobs:
+  luarocks:
+    name: Upload ${{ github.ref_name }} to LuaRocks
+    runs-on: ubuntu-24.04
+    env:
+      LUAROCKS_API_KEY: ${{ secrets.LUAROCKS_API_KEY }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: leafo/gh-actions-lua@v13
+        with:
+          luaVersion: '5.4'
+      - uses: leafo/gh-actions-luarocks@v6
+      - name: Check the tag against the rockspec
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          rockspec="mfr-${TAG#v}.rockspec"
+          if [ ! -f "$rockspec" ]; then
+            echo "Tag $TAG has no matching $rockspec" >&2
+            exit 1
+          fi
+          luarocks lint "$rockspec"
+          echo "ROCKSPEC=$rockspec" >>"$GITHUB_ENV"
+      - name: Upload
+        if: env.LUAROCKS_API_KEY != ''
+        run: |
+          luarocks install dkjson
+          luarocks upload "$ROCKSPEC" --api-key="$LUAROCKS_API_KEY"
+      - name: Skip the upload
+        if: env.LUAROCKS_API_KEY == ''
+        run: echo "::notice::LUAROCKS_API_KEY is not set; nothing was uploaded"
