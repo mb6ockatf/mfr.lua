@@ -1,0 +1,56 @@
+mfr.lua -- an output formatter for Lua
+======================================
+
+mfr is a simple Lua module with functions for prettifying output, such
+as setting the foreground colour of text in the terminal.
+
+Building and installing
+-----------------------
+
+Download the module with LuaRocks:
+
+    luarocks install mfr
+
+Using it
+--------
+
+Import it with
+
+    mfr = require("mfr")
+
+and use any of the functions listed in docs/index.html, for example:
+
+    mfr.describe_fg_colors()
+
+Documentation
+-------------
+
+The function reference is in docs/index.html, generated with ldoc by
+gendocs.sh.  It is also available on GitHub Pages:
+
+    https://mb6ockatf.github.io/mfr.lua/
+
+Unit tests
+----------
+
+The unit tests are written with busted
+(https://github.com/lunarmodules/busted).  Run them with ./test.lua.
+Please note that system-dependent tests are not run (if your terminal
+does not support colours, the corresponding functionality is not
+checked).  Output functions are not tested either.
+
+Reporting bugs
+--------------
+
+This repository is open for contribution.  You are welcome to submit
+ideas and bug reports at https://github.com/mb6ockatf/mfr.lua/issues.
+
+Copying
+-------
+
+Copyright (C) 2023-2024 mb6ockatf
+
+mfr.lua is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or (at
+your option) any later version.  See COPYING.LESSER and COPYING.
