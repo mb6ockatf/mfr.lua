@@ -94,7 +94,7 @@ end
 function mfr.space_split(str)
 	assert(type(str) == "string", "str argument is string")
 	local result = {}
-	for item in str:gmatch("%S*") do table.insert(result, item) end
+	for item in str:gmatch("%S+") do table.insert(result, item) end
 	return result
 end
 
